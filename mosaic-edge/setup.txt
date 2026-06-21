@@ -1,0 +1,650 @@
+================================================================================
+MOSAIC — COMPLETE SETUP FROM SCRATCH
+Modular Orchestrated Swarm with Adaptive Intelligence and Coordination
+================================================================================
+
+This file explains how to set up the complete MOSAIC system
+from scratch on a new Raspberry Pi and new AWS account.
+
+================================================================================
+PART 1 — RASPBERRY PI SETUP
+================================================================================
+
+STEP 1 — Flash Raspberry Pi OS
+--------------------------------------------------------------------------------
+1. Download Raspberry Pi Imager from raspberrypi.com/software
+2. Insert MicroSD card into laptop
+3. Open Raspberry Pi Imager
+4. Choose OS: Raspberry Pi OS (other) -> Raspberry Pi OS Trixie
+5. Choose storage: your MicroSD card
+6. Click settings gear icon:
+   - Set hostname: luminex
+   - Enable SSH
+   - Set username: leopardtech
+   - Set password: your password
+   - Configure WiFi: your network name and password
+7. Click Write and wait for completion
+8. Insert MicroSD into Pi
+9. Power on Pi with 5V 3A USB-C adapter
+
+
+STEP 2 — Connect to Pi
+--------------------------------------------------------------------------------
+Option A SSH from laptop:
+  ssh leopardtech@luminex.local
+  OR
+  ssh leopardtech@PI_IP_ADDRESS
+
+Option B Direct monitor and keyboard:
+  Connect HDMI monitor and USB keyboard
+  Login with your credentials
+
+Find Pi IP address:
+  On router admin page look for luminex
+  OR run from another device: ping luminex.local
+
+
+STEP 3 — Update System
+--------------------------------------------------------------------------------
+  sudo apt update
+  sudo apt upgrade -y
+  sudo reboot
+
+
+STEP 4 — Install System Packages
+--------------------------------------------------------------------------------
+  sudo apt install -y python3-picamera2
+  sudo apt install -y python3-libcamera
+  sudo apt install -y python3-kms++
+  sudo apt install -y i2c-tools
+  sudo apt install -y git
+  sudo apt install -y tmux
+
+
+STEP 5 — Enable Camera
+--------------------------------------------------------------------------------
+  sudo nano /boot/firmware/config.txt
+
+  Add these lines at bottom:
+  camera_auto_detect=1
+  start_x=1
+  gpu_mem=128
+
+  Save with Ctrl+X then Y then Enter
+
+  sudo reboot
+
+  Test camera after reboot:
+  rpicam-hello --timeout 3000
+  Should show camera preview for 3 seconds
+
+
+STEP 6 — Clone Project
+--------------------------------------------------------------------------------
+  cd ~/Desktop
+  git clone https://github.com/YOURUSERNAME/mosaic-edge.git
+  cd mosaic-edge
+
+
+STEP 7 — Install Python Libraries
+--------------------------------------------------------------------------------
+  pip install -r requirements.txt --break-system-packages
+
+  This installs:
+  numpy, opencv-python, Pillow, torch (CPU),
+  ultralytics, paho-mqtt, awsiotsdk, RPi.GPIO, pandas
+
+  Note: torch installation takes 15-20 minutes
+  Note: Use --break-system-packages flag always
+
+
+STEP 8 — Download YOLO Models
+--------------------------------------------------------------------------------
+  python3 download_models.py
+
+  This downloads:
+  models/yolov8n.pt        (person detection)
+  models/yolov8n-pose.pt   (pose analysis)
+
+  If download script fails download manually:
+  python3 -c "
+  import os
+  os.environ['OMP_NUM_THREADS'] = '1'
+  from ultralytics import YOLO
+  YOLO('yolov8n.pt')
+  YOLO('yolov8n-pose.pt')
+  "
+  Then move .pt files to models/ folder
+
+
+STEP 9 — Configure the System
+--------------------------------------------------------------------------------
+  cp config.example.py config.py
+  nano config.py
+
+  Update these values:
+  DEVICE_ID    = "mosaic-node-01"
+  IOT_ENDPOINT = "YOUR-ENDPOINT.iot.ap-south-1.amazonaws.com"
+  GPS_LAT      = your latitude
+  GPS_LON      = your longitude
+
+  Save with Ctrl+X then Y then Enter
+
+
+STEP 10 — Add AWS Certificates
+--------------------------------------------------------------------------------
+  Copy these 3 files into certs/ folder:
+  - AmazonRootCA1.pem
+  - device.pem.crt
+  - private.pem.key
+
+  To copy from laptop via SCP:
+  scp AmazonRootCA1.pem leopardtech@PI_IP:~/Desktop/mosaic-edge/certs/
+  scp device.pem.crt leopardtech@PI_IP:~/Desktop/mosaic-edge/certs/
+  scp private.pem.key leopardtech@PI_IP:~/Desktop/mosaic-edge/certs/
+
+  Verify:
+  ls -la ~/Desktop/mosaic-edge/certs/
+  Should show all 3 files
+
+
+================================================================================
+PART 2 — AWS SETUP
+================================================================================
+
+STEP 11 — Create DynamoDB Tables
+--------------------------------------------------------------------------------
+  Go to AWS Console -> DynamoDB -> Create table
+
+  Table 1:
+  Name: detections
+  Partition key: device_id (String)
+  Sort key: timestamp (String)
+  Settings: default
+  Click Create table
+
+  Table 2:
+  Name: swarm_nodes
+  Partition key: device_id (String)
+  No sort key
+  Click Create table
+
+  Table 3:
+  Name: policies
+  Partition key: device_id (String)
+  No sort key
+  Click Create table
+
+  Table 4:
+  Name: feedback_history
+  Partition key: device_id (String)
+  Sort key: timestamp (String)
+  Click Create table
+
+  All tables must be in ap-south-1 region
+
+
+STEP 12 — Create S3 Bucket
+--------------------------------------------------------------------------------
+  Go to AWS Console -> S3 -> Create bucket
+
+  Bucket name: mosaic-snapshots-yourname
+  Region: ap-south-1
+  Uncheck Block all public access
+  Acknowledge warning
+  Click Create bucket
+
+  After creation go to bucket:
+  Permissions -> Bucket Policy -> Edit
+  Paste:
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": "s3:GetObject",
+        "Resource": "arn:aws:s3:::mosaic-snapshots-yourname/*"
+      }
+    ]
+  }
+  Replace yourname with actual bucket name
+  Save
+
+
+STEP 13 — Create IAM Role for Lambda
+--------------------------------------------------------------------------------
+  Go to AWS Console -> IAM -> Roles -> Create role
+
+  Trusted entity: AWS Service
+  Use case: Lambda
+  Click Next
+
+  Add these policies:
+  - AmazonDynamoDBFullAccess
+  - AmazonS3FullAccess
+  - AWSIoTFullAccess
+  - AWSLambdaBasicExecutionRole
+  - CloudWatchFullAccess
+
+  Role name: mosaic-lambda-role
+  Click Create role
+
+
+STEP 14 — Deploy Lambda Functions
+--------------------------------------------------------------------------------
+  Go to AWS Console -> Lambda -> Create function
+
+  For each of the 7 Lambda functions:
+
+  1. mosaic-detection-ingest
+     Runtime: Python 3.13
+     Role: mosaic-lambda-role
+     Code: paste from lambda/detection_ingest.py
+     Timeout: 30 seconds
+     Memory: 256 MB
+     Trigger: IoT Rule (add after step 15)
+
+  2. mosaic-operator-feedback
+     Runtime: Python 3.13
+     Role: mosaic-lambda-role
+     Code: paste from lambda/operator_feedback.py
+     Timeout: 30 seconds
+     Memory: 256 MB
+     Trigger: API Gateway POST /feedback
+
+  3. mosaic-get-detections
+     Runtime: Python 3.13
+     Role: mosaic-lambda-role
+     Code: paste from lambda/get_detections.py
+     Timeout: 30 seconds
+     Memory: 256 MB
+     Trigger: API Gateway GET /detections
+
+  4. mosaic-get-swarm-status
+     Runtime: Python 3.13
+     Role: mosaic-lambda-role
+     Code: paste from lambda/get_swarm.py
+     Timeout: 15 seconds
+     Memory: 128 MB
+     Trigger: API Gateway GET /swarm
+
+  5. mosaic-get-policy
+     Runtime: Python 3.13
+     Role: mosaic-lambda-role
+     Code: paste from lambda/get_policy.py
+     Timeout: 15 seconds
+     Memory: 128 MB
+     Trigger: API Gateway GET /policy
+
+  6. mosaic-heartbeat-ingest
+     Runtime: Python 3.13
+     Role: mosaic-lambda-role
+     Code: paste from lambda/heartbeat_ingest.py
+     Timeout: 15 seconds
+     Memory: 128 MB
+     Trigger: API Gateway POST /heartbeat
+
+  7. mosaic-get-scenarios
+     Runtime: Python 3.13
+     Role: mosaic-lambda-role
+     Code: paste from lambda/get_scenarios.py
+     Timeout: 15 seconds
+     Memory: 128 MB
+     Trigger: API Gateway GET /scenarios
+
+  After pasting each code click Deploy button
+
+
+STEP 15 — Create IoT Core Thing and Certificates
+--------------------------------------------------------------------------------
+  Go to AWS Console -> IoT Core
+
+  Create Thing:
+  Manage -> All devices -> Things -> Create things
+  Single thing
+  Thing name: mosaic-node-01
+  Click Next -> Click Next
+  Auto-generate certificate
+  Download all 4 files:
+    - device certificate .crt file
+    - public key file
+    - private key file
+    - AmazonRootCA1.pem (click download)
+  IMPORTANT: Download now, cannot download private key again
+  Click Activate
+  Click Next
+
+  Create Policy:
+  Security -> Policies -> Create policy
+  Name: mosaic-device-policy
+  Policy document -> JSON:
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "iot:Connect",
+          "iot:Publish",
+          "iot:Subscribe",
+          "iot:Receive"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
+  Click Create
+
+  Attach policy to certificate:
+  Security -> Certificates -> click your certificate
+  Policies tab -> Attach policy -> mosaic-device-policy
+
+  Attach certificate to thing:
+  Things tab -> Attach to thing -> mosaic-node-01
+
+  Get IoT Endpoint:
+  Settings -> Device data endpoint
+  Copy the URL ending in amazonaws.com
+  Paste into config.py as IOT_ENDPOINT
+
+
+STEP 16 — Create IoT Rule
+--------------------------------------------------------------------------------
+  Go to AWS Console -> IoT Core
+  Message Routing -> Rules -> Create rule
+
+  Rule name: mosaic-detection-rule
+  SQL statement:
+  SELECT * FROM 'mosaic/node/+/detection'
+
+  Add action:
+  Action type: Lambda
+  Lambda function: mosaic-detection-ingest
+  Click Create
+
+  Make sure rule status is ENABLED
+
+
+STEP 17 — Create API Gateway
+--------------------------------------------------------------------------------
+  Go to AWS Console -> API Gateway -> Create API
+  REST API -> Build
+  API name: mosaic-api
+  Endpoint type: Regional
+  Click Create API
+
+  Create these resources and methods:
+
+  /detections  GET  -> mosaic-get-detections
+  /swarm       GET  -> mosaic-get-swarm-status
+  /policy      GET  -> mosaic-get-policy
+  /feedback    POST -> mosaic-operator-feedback
+  /heartbeat   POST -> mosaic-heartbeat-ingest
+  /scenarios   GET  -> mosaic-get-scenarios
+
+  For each method:
+  Integration type: Lambda Function
+  Lambda Region: ap-south-1
+  Lambda Function: (select correct function)
+  Check Use Lambda Proxy integration
+  Click Save
+
+  Enable CORS:
+  Click each resource -> Actions -> Enable CORS
+  Click Enable CORS and replace existing
+
+  Deploy API:
+  Actions -> Deploy API
+  Stage name: dev
+  Click Deploy
+  Copy the Invoke URL shown
+  This is your API base URL
+
+  Update dashboard.html and stakeholder.html:
+  Find: const API = 'https://...'
+  Replace with your Invoke URL
+
+
+================================================================================
+PART 3 — DASHBOARD SETUP
+================================================================================
+
+STEP 18 — Update Dashboard API URL
+--------------------------------------------------------------------------------
+  On Pi:
+  nano ~/Desktop/mosaic-edge/dashboard.html
+
+  Find line:
+  const API = 'https://zmhig1k592.execute-api.ap-south-1.amazonaws.com/dev'
+
+  Replace with your API Gateway URL:
+  const API = 'https://YOUR-API-ID.execute-api.ap-south-1.amazonaws.com/dev'
+
+  Do same for stakeholder.html
+
+  Save both files
+
+
+STEP 19 — Run Dashboard
+--------------------------------------------------------------------------------
+  On laptop or Pi:
+  cd ~/Desktop/mosaic-edge
+  python3 -m http.server 3000
+
+  Open browser:
+  http://localhost:3000/dashboard.html
+  http://localhost:3000/stakeholder.html
+
+  For hosting on Netlify:
+  Go to netlify.com
+  Sign up free
+  Drag and drop dashboard.html
+  Get public URL instantly
+
+
+================================================================================
+PART 4 — HARDWARE CONNECTIONS
+================================================================================
+
+STEP 20 — Camera Connection
+--------------------------------------------------------------------------------
+  Power OFF Pi completely
+
+  Connect camera ribbon cable:
+  Pi CSI port (near HDMI) -> Camera module
+  Blue side of ribbon faces HDMI port on Pi end
+  Metal contacts face down on camera module end
+  Lock both connectors firmly
+
+  Power ON Pi
+
+  Test:
+  rpicam-hello --timeout 3000
+  Should show preview window for 3 seconds
+
+  If timeout error:
+  Check ribbon cable fully inserted on both ends
+  Check Pi powered from 5V 3A adapter not laptop USB
+
+
+STEP 21 — ESC Signal Wire Connections
+--------------------------------------------------------------------------------
+  Remove all propellers before connecting
+
+  Each ESC has thin 3-wire signal connector:
+  Wire colors (most common):
+  Brown or Black -> GND
+  Red            -> +5V (DO NOT connect to Pi)
+  Orange/White/Yellow -> Signal
+
+  Connect signal wires to Pi GPIO:
+  ESC Front Left  Signal -> Pi GPIO 17 (Pin 11)
+  ESC Front Right Signal -> Pi GPIO 18 (Pin 12)
+  ESC Rear Left   Signal -> Pi GPIO 27 (Pin 13)
+  ESC Rear Right  Signal -> Pi GPIO 22 (Pin 15)
+  All ESC GND wires    -> Pi Pin 6 (GND)
+  Red +5V wires        -> Leave disconnected
+
+  Connect power:
+  Battery or bench supply (+) -> PDB XT60 positive
+  Battery or bench supply (-) -> PDB XT60 negative
+                              AND Pi Pin 6 GND
+
+  Pi powered separately from USB-C 5V 3A
+
+
+STEP 22 — ESC Calibration (Run Once)
+--------------------------------------------------------------------------------
+  Remove all propellers
+  Power supply OFF
+  Run:
+  python3 esc_calibrate.py
+
+  Follow prompts:
+  1. Type YES to confirm propellers removed
+  2. Script sends max signal
+  3. Turn on power supply when prompted
+  4. Listen for ESC startup beeps
+  5. Script sends min signal
+  6. Listen for calibration confirmation beeps
+  7. Calibration complete
+
+
+================================================================================
+PART 5 — RUNNING THE SYSTEM
+================================================================================
+
+STEP 23 — Test All Components
+--------------------------------------------------------------------------------
+  Test imports:
+  python3 -c "
+  import sys
+  sys.path.insert(0, '.')
+  from detection.detector import Detector
+  from detection.pose_analyzer import PoseAnalyzer
+  from detection.expression_analyzer import ExpressionAnalyzer
+  from detection.confidence import ConfidenceAssembler
+  from actuation.motor_controller import MotorController
+  from comms.mqtt_client import MQTTClient
+  print('All imports OK')
+  "
+
+  Test camera:
+  python3 camera/capture.py
+
+  Test motors:
+  python3 actuation/motor_controller.py
+
+
+STEP 24 — Run Main System
+--------------------------------------------------------------------------------
+  Terminal 1 on Pi:
+  cd ~/Desktop/mosaic-edge
+  python3 main.py
+
+  Terminal 2 on Pi (optional simulator):
+  cd ~/Desktop/mosaic-edge
+  python3 swarm_simulator.py
+
+  OR run both together:
+  ./launch_all.sh
+
+
+STEP 25 — Verify End to End
+--------------------------------------------------------------------------------
+  1. main.py running and showing detection output
+  2. AWS IoT MQTT Test Client shows messages
+     Subscribe to: mosaic/node/+/detection
+  3. CloudWatch logs show Lambda 1 triggered
+  4. DynamoDB detections table shows new rows
+  5. S3 bucket shows images for uncertain detections
+  6. Dashboard shows detections in live feed
+  7. Operator alerts panel shows uncertain cases
+  8. Click confirm -> threshold updates
+  9. Swarm nodes panel shows node-01 active
+
+
+================================================================================
+PART 6 — TROUBLESHOOTING
+================================================================================
+
+Problem: Illegal instruction when running detection
+Fix: Set environment variables before import
+     Check env_setup.py is imported first
+     Ensure torch is CPU version not CUDA version
+     pip show torch should show 2.6.0+cpu not cu130
+
+Problem: Camera timeout error
+Fix: Check ribbon cable fully seated both ends
+     Check powered from 5V 3A adapter not laptop USB
+     Run: vcgencmd get_throttled (should show 0x0)
+     Run: i2cdetect -y 10 (should show 36 at row 30)
+
+Problem: MQTT not connecting
+Fix: Check certificates in certs/ folder (3 files)
+     Check IOT_ENDPOINT in config.py is correct
+     Check internet connection on Pi
+     Check IoT policy allows all actions
+
+Problem: Data not in DynamoDB
+Fix: Check detection nested under detection key in payload
+     Check Lambda 1 CloudWatch logs for errors
+     Check DynamoDB table names match Lambda code
+     Check IAM role has DynamoDB permissions
+
+Problem: Dashboard not loading data
+Fix: Run from localhost:3000 not file://
+     Check API URL in dashboard.html matches your API
+     Check API Gateway deployed to dev stage
+     Open F12 console and check for CORS errors
+
+Problem: Motors not spinning
+Fix: Run ESC calibration first
+     Check ESC GND connected to Pi GND
+     Check signal wire on correct GPIO pin
+     Use multimeter to verify signal wire
+     Check battery connected to PDB
+
+Problem: Images not showing in dashboard
+Fix: Check S3 bucket is public
+     Check Lambda 3 generates presigned URL
+     Check s3_image_key field in DynamoDB item
+     Test URL directly in browser
+
+
+================================================================================
+MINIMUM REQUIREMENTS SUMMARY
+================================================================================
+
+Hardware:
+- Raspberry Pi 4 8GB
+- MicroSD 64GB
+- Pi Camera Module v1.3
+- F450 frame with motors and ESCs
+- 3S LiPo battery or bench supply
+
+Software:
+- Raspberry Pi OS Trixie
+- Python 3.13.5
+- All packages in requirements.txt
+- YOLO models in models/ folder
+- AWS certificates in certs/ folder
+
+AWS:
+- IoT Core thing with certificate
+- 4 DynamoDB tables
+- 1 S3 bucket
+- 7 Lambda functions
+- 1 API Gateway with 6 endpoints
+- 1 IoT Rule
+- 1 IAM role with required permissions
+
+Configuration:
+- config.py with your IOT_ENDPOINT
+- dashboard.html with your API URL
+- stakeholder.html with your API URL
+
+================================================================================
+END OF SETUP GUIDE
+================================================================================

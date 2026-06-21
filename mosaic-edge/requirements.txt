@@ -1,0 +1,22 @@
+# MOSAIC Edge — Compatible Stack
+# Python 3.11.9 on Raspberry Pi 4
+
+# Core — ORDER MATTERS
+numpy==1.24.3
+opencv-python-headless==4.8.1.78
+Pillow==10.1.0
+
+# Detection
+ultralytics==8.0.196
+
+# Expression (replaces TensorFlow+DeepFace)
+torch==2.1.0
+torchvision==0.16.0
+fer==22.5.1
+
+# Communication
+paho-mqtt==1.6.1
+awsiotsdk==1.14.1
+
+# GPIO (install via apt preferred)
+# RPi.GPIO

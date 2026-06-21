@@ -1,0 +1,7 @@
+{
+    "threshold": 0.60,
+    "floor": 0.30,
+    "confidence_weight": 0.50,
+    "pose_weight": 0.30,
+    "expression_weight": 0.20
+}
