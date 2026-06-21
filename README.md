@@ -1,93 +1,202 @@
+<!-- ═══════════════════════ ANIMATED HERO HEADER ═══════════════════════ -->
 <div align="center">
 
-<img src="https://img.shields.io/badge/MOSAIC-AI%20Swarm%20Intelligence-00d4ff?style=for-the-badge&labelColor=030810&color=00d4ff" alt="MOSAIC"/>
+<a href="https://youtu.be/-SGyDQs7yAI">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:030810,50:0a4d6b,100:00d4ff&height=200&section=header&text=MOSAIC&fontSize=80&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=AI%20Swarm%20Intelligence%20for%20Disaster%20Response&descAlignY=60&descSize=18" width="100%"/>
+</a>
 
-# 🛸 MOSAIC
-### Modular Orchestrated Swarm with Adaptive Intelligence and Coordination
-
-<p align="center">
-  <strong>AI-powered drone swarm that finds flood victims 12× faster than manual search</strong><br/>
-  Autonomous detection · Cloud pipeline · Human-in-the-loop learning · Dual dashboards
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.13.5-3776AB?style=flat-square&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/YOLOv8-Detection-FF6B35?style=flat-square"/>
-  <img src="https://img.shields.io/badge/AWS-IoT%20Core-FF9900?style=flat-square&logo=amazonaws&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Raspberry%20Pi-4%208GB-C51A4A?style=flat-square&logo=raspberrypi&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Status-MVP%20Complete-00ff88?style=flat-square"/>
-</p>
+<!-- TYPING ANIMATION -->
+<a href="https://github.com/aayushraj05/Mosaic">
+  <img src="https://readme-typing-svg.demolab.com?font=Orbitron&size=24&duration=3000&pause=800&color=00D4FF&center=true&vCenter=true&width=800&height=60&lines=Modular+Orchestrated+Swarm+Intelligence;Finds+Flood+Victims+12x+Faster;Detect+%E2%86%92+Analyze+%E2%86%92+Locate+%E2%86%92+Rescue;Turning+Critical+Minutes+Into+Saved+Lives" alt="Typing SVG"/>
+</a>
 
 <br/>
 
-> **"Turning Critical Minutes into Saved Lives"**  
-> *From detection to rescue coordination — in real time*
+<!-- ANIMATED TECH BADGES -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.13.5-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
+  <img src="https://img.shields.io/badge/YOLOv8-Detection-FF6B35?style=for-the-badge&logo=pytorch&logoColor=white"/>
+  <img src="https://img.shields.io/badge/AWS-IoT%20Core-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Raspberry%20Pi-4%208GB-C51A4A?style=for-the-badge&logo=raspberrypi&logoColor=white"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-MVP%20COMPLETE-00ff88?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/12x-FASTER%20THAN%20MANUAL-ff3355?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Detection-0.07s%2Fframe-ffcc00?style=for-the-badge"/>
+</p>
+
+<!-- LIVE COUNTERS -->
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=mosaic-mvp&style=flat-square&color=00d4ff&label=PROJECT+VIEWS"/>
+</p>
+
+</div>
+
+<!-- ANIMATED DIVIDER -->
+<img src="https://raw.githubusercontent.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/main/assets/rainbow-line.gif" width="100%"/>
+
+<div align="center">
+
+> ### 🌊 *"Turning Critical Minutes into Saved Lives"*
+> **From detection to rescue coordination — in real time**
+
+</div>
+
+<img src="https://raw.githubusercontent.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/main/assets/rainbow-line.gif" width="100%"/>
+
+<br/>
+
+<!-- ═══════════════════════ SYSTEM OVERVIEW ═══════════════════════ -->
+
+<div align="center">
+
+## 🖼️ System Overview
+
+<img src="https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&size=18&duration=2000&pause=500&color=00FF88&center=true&vCenter=true&width=600&height=40&lines=Scroll+through+the+complete+MOSAIC+system" alt="overview"/>
 
 </div>
 
 ---
 
-## 🖼️ System Overview
+### 📋 Product Flyer
+> 🟦 *Official MOSAIC product flyer showcasing the complete system — autonomous drone swarm, cloud intelligence layer, and dual dashboard architecture designed for flood disaster response.*
 
 <div align="center">
-  <img src="Images/Physical%20Mvp%20Drone.png" alt="MOSAIC Physical MVP Drone" width="45%"/>
-  &nbsp;&nbsp;
-  <img src="Images/Operator_dashboard.png" alt="MOSAIC Operator Dashboard" width="45%"/>
+  <img src="Images/Flyer.jpeg" alt="MOSAIC Product Flyer" width="92%"/>
 </div>
 
-<br/>
+---
+
+### 🛸 Physical MVP Drone
+> 🟩 *The actual MOSAIC MVP hardware — F450 quadcopter frame with Avionics C2826 1000KV brushless motors, Raspberry Pi 4 compute unit, and OV5647 camera module running YOLOv8 detection in real time.*
 
 <div align="center">
-  <img src="Images/Detected_victim%20(Drone%20Pov).png" alt="MOSAIC Live Detection — Drone POV" width="45%"/>
-  &nbsp;&nbsp;
-  <img src="Images/Rescueteam_dashboard.png" alt="MOSAIC Rescue Team Dashboard" width="45%"/>
+  <img src="Images/Physical%20Mvp%20Drone.png" alt="MOSAIC Physical MVP Drone" width="92%"/>
 </div>
 
-<br/>
+---
+
+### 📐 MVP CAD Design
+> 🟪 *CAD schematic of the MOSAIC MVP drone — showing component placement, frame structure, motor positions, and electronic layout planned before physical assembly.*
+
+<div align="center">
+  <img src="Images/Mvp%20CAD%20design.jpeg" alt="MOSAIC MVP CAD Design" width="92%"/>
+</div>
+
+---
+
+### 🎯 Product Design Vision
+> 🟧 *Conceptual product-level drone design — the full MOSAIC product vision with custom carbon fiber frame, dual RGB and thermal camera gimbal, active cooling, environmental sensors, and LoRa communication module.*
+
+<div align="center">
+  <img src="Images/Product%20Design.jpeg" alt="MOSAIC Product Design Vision" width="92%"/>
+</div>
+
+---
+
+### 🔍 Live Detection — Drone POV
+> 🟥 *Real-time YOLOv8 detection output from drone camera — green bounding box identifies confirmed victim, confidence score 0.87, pose indicators showing arms raised and upright, status CONFIRMED with motors spinning.*
+
+<div align="center">
+  <img src="Images/Detected_victim%20(Drone%20Pov).png" alt="MOSAIC Live Detection Drone POV" width="92%"/>
+</div>
+
+---
+
+### 📊 Operator Dashboard
+> 🟦 *MOSAIC operator dashboard showing live detection feed with victim images, confidence scores, YOLO and pose analysis, adaptive policy threshold, swarm node health, and operator confirm/reject controls for human-in-the-loop learning.*
+
+<div align="center">
+  <img src="Images/Operator_dashboard.png" alt="MOSAIC Operator Dashboard" width="92%"/>
+</div>
+
+---
+
+### 👥 Rescue Team Stakeholder Dashboard
+> 🟩 *MOSAIC stakeholder dashboard for NDRF/SDRF commanders — shows confirmed victim count, GPS coordinates, zone coverage map, priority rescue list, and one-tap Google Maps navigation. No technical jargon, only actionable intelligence.*
+
+<div align="center">
+  <img src="Images/Rescueteam_dashboard.png" alt="MOSAIC Rescue Team Stakeholder Dashboard" width="92%"/>
+</div>
+
+---
+
+### 📈 Detection Results
+> 🟨 *End-to-end detection pipeline results — showing confirmed and uncertain detections across all 4 swarm nodes, adaptive threshold evolution, operator feedback loop in action, and system accuracy metrics.*
 
 <div align="center">
   <img src="Images/Results.png" alt="MOSAIC Detection Results" width="92%"/>
 </div>
 
----
+<br/>
 
-## 🎬 Demo Video
+<img src="https://raw.githubusercontent.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/main/assets/rainbow-line.gif" width="100%"/>
+
+<!-- ═══════════════════════ DEMO VIDEO ═══════════════════════ -->
 
 <div align="center">
 
+## 🎬 Demo Video
+
 [![MOSAIC Full System Demo](https://img.youtube.com/vi/-SGyDQs7yAI/maxresdefault.jpg)](https://youtu.be/-SGyDQs7yAI)
 
-**[▶ Watch Full Demo on YouTube](https://youtu.be/-SGyDQs7yAI)**
+<a href="https://youtu.be/-SGyDQs7yAI">
+  <img src="https://img.shields.io/badge/▶%20WATCH%20FULL%20DEMO-YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white"/>
+</a>
+<a href="https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link">
+  <img src="https://img.shields.io/badge/📥%20DOWNLOAD%20PACKAGE-Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white"/>
+</a>
+
+<br/><br/>
 
 *Live YOLOv8 detection · Motors spinning · Dashboard updating in real time · Operator feedback · Threshold adapting*
 
-<br/>
-
-📥 **[Download Full Demo Package from Google Drive](https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link)**
-
 </div>
 
----
+<img src="https://raw.githubusercontent.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/main/assets/rainbow-line.gif" width="100%"/>
+
+<!-- ═══════════════════════ THE PROBLEM ═══════════════════════ -->
 
 ## 🌊 The Problem
 
-Every year floods in India displace **40 million people** and claim **1,600+ lives** — not because rescue teams are slow, but because nobody knows where victims are.
+<table>
+<tr>
+<td width="60%">
 
-Manual search teams cover **0.2 sq km/hour**. MOSAIC covers **2.4 sq km/hour per drone**.  
-That is **12× faster**. Every second saved is a life saved.
+Every year floods in India displace **40 million people** and claim **1,600+ lives** — not because rescue teams are slow, but because **nobody knows where victims are.**
+
+Manual search teams cover **0.2 sq km/hour**.  
+MOSAIC covers **2.4 sq km/hour per drone**.
+
+That is **12× faster.**  
+Every second saved is a life saved.
+
+</td>
+<td width="40%" align="center">
+
+<img src="https://img.shields.io/badge/40M-DISPLACED%2FYEAR-ff3355?style=for-the-badge"/>
+<br/>
+<img src="https://img.shields.io/badge/1600+-DEATHS%2FYEAR-ff8800?style=for-the-badge"/>
+<br/>
+<img src="https://img.shields.io/badge/12x-FASTER-00ff88?style=for-the-badge"/>
+
+</td>
+</tr>
+</table>
 
 ---
 
 ## ✨ What MOSAIC Does
 
-| Capability | Detail |
-|-----------|--------|
-| 🎯 **Autonomous Detection** | YOLOv8 detects persons at 15 FPS on edge hardware |
-| 🦾 **Pose Analysis** | 17 body keypoints identify fallen, waving, unconscious victims |
-| ☁️ **Cloud Pipeline** | GPS coordinates reach rescue teams in under 3 seconds |
-| 🧠 **Adaptive Learning** | Operator feedback updates all drones simultaneously |
-| 📊 **Dual Dashboards** | Separate views for technical operators and field commanders |
-| 📡 **Resilient Comms** | Works offline — zero data loss architecture |
+| | Capability | Detail |
+|:--:|:--|:--|
+| 🎯 | **Autonomous Detection** | YOLOv8 detects persons at 15 FPS on edge hardware |
+| 🦾 | **Pose Analysis** | 17 body keypoints identify fallen, waving, unconscious victims |
+| ☁️ | **Cloud Pipeline** | GPS coordinates reach rescue teams in under 3 seconds |
+| 🧠 | **Adaptive Learning** | Operator feedback updates all drones simultaneously |
+| 📊 | **Dual Dashboards** | Separate views for technical operators and field commanders |
+| 📡 | **Resilient Comms** | Works offline — zero data loss architecture |
 
 ---
 
@@ -138,7 +247,7 @@ That is **12× faster**. Every second saved is a life saved.
 ## 🔧 Hardware Required
 
 <details>
-<summary><strong>Click to expand hardware list</strong></summary>
+<summary><strong>🔽 Click to expand hardware list</strong></summary>
 
 ### Compute
 - Raspberry Pi 4 Model B — 8GB RAM
@@ -174,7 +283,7 @@ That is **12× faster**. Every second saved is a life saved.
 ## ☁️ AWS Infrastructure Required
 
 <details>
-<summary><strong>Click to expand AWS setup</strong></summary>
+<summary><strong>🔽 Click to expand AWS setup</strong></summary>
 
 **Region: ap-south-1 (Mumbai)**
 
@@ -268,7 +377,7 @@ mosaic-edge/
 ├── 💾 data/                Local telemetry CSV storage
 ├── 🧠 detection/           AI pipeline — YOLOv8 + Pose + Expression
 ├── ☁️  lambda/              7 AWS Lambda functions
-├── 🖼️  Images/              Product screenshots and drone photos
+├── 🖼️  Images/              Product screenshots, CAD, drone photos
 ├── 🤖 models/              YOLO model files (not in repo)
 ├── 🛠️  utils/               Image drawing and telemetry logging
 ├── ⚙️  config.example.py    Configuration template (copy to config.py)
@@ -365,23 +474,51 @@ Detection → Uncertain → Operator sees photo
 
 ---
 
-## 🏢 Institution
+<img src="https://raw.githubusercontent.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/main/assets/rainbow-line.gif" width="100%"/>
 
-**TCS — Tata Consultancy Services**  
-Product MOSAIC — Flood Disaster Response AI System  
-IAE Training Program · 2026
-
----
+## 👨‍💻 Team
 
 <div align="center">
 
-**FROM DETECTION TO RESCUE COORDINATION — IN REAL TIME**
+| Name | Employee ID |
+|------|-------------|
+| Giftina Roseline S N | 2861104 |
+| Rishav Kumar | 3199845 |
+| Bharanidharan J | 2859059 |
+| Oviya P | 2876916 |
+| Aayush Rajput | 2861780 |
+| Soma Sundaram A | 2860572 |
 
-*Designed for Flood Response · Autonomous Operations · Smart Coordination · Scalable Deployment*
+</div>
+
+---
+
+## 🏢 Institution
+
+<div align="center">
+
+**TCS — Tata Consultancy Services**  
+Project MOSAIC — Flood Disaster Response AI System  
+IAE Training Program · 2026
+
+</div>
+
+<!-- ═══════════════════════ ANIMATED FOOTER ═══════════════════════ -->
+
+<img src="https://raw.githubusercontent.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/main/assets/rainbow-line.gif" width="100%"/>
+
+<div align="center">
+
+<img src="https://readme-typing-svg.demolab.com?font=Orbitron&size=22&duration=3000&pause=1000&color=00D4FF&center=true&vCenter=true&width=900&height=50&lines=FROM+DETECTION+TO+RESCUE+IN+REAL+TIME;COLLABORATE+%E2%80%A2+ADAPT+%E2%80%A2+LEARN+%E2%80%A2+SAVE+LIVES" alt="footer"/>
 
 <br/>
 
-[![YouTube](https://img.shields.io/badge/Demo-YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/-SGyDQs7yAI)
-[![Google Drive](https://img.shields.io/badge/Download-Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link)
-
+<a href="https://youtu.be/-SGyDQs7yAI">
+  <img src="https://img.shields.io/badge/Demo-YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white"/>
+</a>
+<a href="https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link">
+  <img src="https://img.shields.io/badge/Download-Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white"/>
+</a>
 </div>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00d4ff,50:0a4d6b,100:030810&height=120&section=footer"/>
