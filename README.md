@@ -365,23 +365,10 @@ Detection → Uncertain → Operator sees photo
 
 ---
 
-## 👨‍💻 Team
-
-| Name | Employee ID |
-|------|-------------|
-| Giftina Roseline S N | 2861104 |
-| Rishav Kumar | 3199845 |
-| Bharanidharan J | 2859059 |
-| Oviya P | 2876916 |
-| Aayush Rajput | 2861780 |
-| Soma Sundaram A | 2860572 |
-
----
-
 ## 🏢 Institution
 
 **TCS — Tata Consultancy Services**  
-Project MOSAIC — Flood Disaster Response AI System  
+Product MOSAIC — Flood Disaster Response AI System  
 IAE Training Program · 2026
 
 ---
