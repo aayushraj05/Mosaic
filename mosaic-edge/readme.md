@@ -1,154 +1,336 @@
 # MOSAIC
+
 ## Modular Orchestrated Swarm with Adaptive Intelligence and Coordination
 
-AI-powered drone swarm system for flood disaster search and rescue operations.
-Detects flood victims autonomously using YOLOv8, sends GPS coordinates to
-rescue teams in under 3 seconds, and adapts through human-in-the-loop learning.
+**AI-powered autonomous drone swarm system for flood disaster search and rescue operations.**
+
+MOSAIC combines Edge AI, cloud intelligence, and human-in-the-loop learning to detect flood victims, coordinate rescue teams, and continuously improve decision-making across multiple drones in real time.
 
 ---
 
-## What This System Does
+## Overview
 
-- Deploys 4 autonomous drones over flood-affected area
-- Detects persons in real time using YOLOv8 AI on Raspberry Pi 4
-- Analyzes body pose to identify distress signals
-- Sends GPS coordinates to rescue teams in under 3 seconds
-- Operator reviews uncertain detections with actual photos
-- System threshold adapts based on operator feedback
-- All 4 drones receive updated intelligence simultaneously
-- Two dashboards serve operators and commanders separately
+During flood disasters, rescue teams often struggle to locate victims quickly due to limited visibility, inaccessible terrain, and communication challenges.
 
----
+MOSAIC addresses these challenges through a coordinated swarm of intelligent drones capable of:
 
-## Hardware Required
+* Autonomous aerial surveillance
+* Real-time victim detection
+* Distress behavior analysis
+* GPS-based location reporting
+* Adaptive learning from operator feedback
+* Multi-drone intelligence synchronization
 
-### Compute
-- Raspberry Pi 4 Model B 8GB RAM
-- MicroSD Card 64GB Class 10 minimum
-
-### Camera
-- Raspberry Pi Camera Module v1.3 (OV5647 sensor)
-- CSI ribbon cable
-
-### Drone Frame and Motors
-- F450 Quadcopter Frame with built-in PDB
-- 4x Avionics C2826 1000KV Brushless Motors
-- 4x 30A ESC (Electronic Speed Controllers)
-- 4x 10x4.5 inch Propellers (2 CW, 2 CCW)
-
-### Power
-- 3S LiPo Battery 3300mAh 35C (XT60 connector)
-- USB-C 5V 3A adapter for Raspberry Pi (separate)
-- OR Keithley DC bench supply 11V 3A for testing
-
-### Cooling
-- Aluminum heatsink set for Pi 4
-- 30mm 5V cooling fan
-
-### Connections
-- Male to Female jumper wires (minimum 10)
-- XT60 male connector for battery connection
+The system is designed to identify victims and deliver actionable rescue information to response teams in **under 3 seconds**.
 
 ---
 
-## Software Required
+## Key Features
 
-### Operating System
-- Raspberry Pi OS Trixie (Debian 13)
-- Python 3.13.5 (comes with Trixie)
+### Autonomous Drone Swarm
 
-### AWS Services Required
-- AWS Account with ap-south-1 region access
-- AWS IoT Core
-- AWS Lambda
-- AWS DynamoDB
-- AWS S3
-- AWS API Gateway
-- AWS CloudWatch
+* Deploys a coordinated fleet of 4 drones
+* Covers large flood-affected regions efficiently
+* Shares intelligence across all active nodes
 
-### Python Libraries
-Listed in requirements.txt
+### Edge AI Victim Detection
 
----
+* YOLOv8-based real-time person detection
+* Runs directly on Raspberry Pi 4
+* Reduces cloud dependency and latency
 
-## AWS Infrastructure Required
+### Distress Recognition
 
-### IoT Core
-- Thing Name: mosaic-node-01
-- IoT Policy: allow all IoT actions
-- Certificate: device certificate attached to thing
-- IoT Rule: routes detection topic to Lambda 1
+* Human pose analysis for emergency gestures
+* Confidence-based risk assessment
+* Enhanced victim prioritization
 
-### DynamoDB Tables
-- detections (PK: device_id, SK: timestamp)
-- swarm_nodes (PK: device_id)
-- policies (PK: device_id)
-- feedback_history (PK: device_id, SK: timestamp)
+### Rapid Rescue Coordination
 
-### S3 Bucket
-- Name: mosaic-snapshots-yourname
-- Region: ap-south-1
-- Public read access for images
+* Automatic GPS coordinate extraction
+* Detection data transmitted in under 3 seconds
+* Immediate rescue team notification
 
-### Lambda Functions (7 total)
-- mosaic-detection-ingest
-- mosaic-operator-feedback
-- mosaic-get-detections
-- mosaic-get-swarm-status
-- mosaic-get-policy
-- mosaic-heartbeat-ingest
-- mosaic-get-scenarios
+### Human-in-the-Loop Learning
 
-### API Gateway
-- REST API with 6 endpoints
-- CORS enabled on all resources
-- Deployed to stage: dev
+* Operators review uncertain detections
+* Feedback continuously improves system accuracy
+* Decision thresholds adapt dynamically
 
-### IAM Role
-- mosaic-lambda-role
-- Permissions: DynamoDB, S3, IoT, Lambda, CloudWatch
+### Dual Dashboard Architecture
+
+* Operator Dashboard for incident review
+* Command Dashboard for mission monitoring
+* Real-time swarm health and analytics
 
 ---
 
-## Project Structure
+## System Architecture
+
+```text
+Flood Disaster Zone
+        │
+        ▼
+┌────────────────────────┐
+│   Drone Swarm Layer    │
+│    (4 AI Drones)       │
+└────────────────────────┘
+        │
+        ▼
+┌────────────────────────┐
+│  Edge AI Processing    │
+│ YOLOv8 + Pose Analysis │
+└────────────────────────┘
+        │
+        ▼
+┌────────────────────────┐
+│       AWS Cloud        │
+│ IoT • Lambda • DynamoDB│
+└────────────────────────┘
+        │
+   ┌────┴────┐
+   ▼         ▼
+Operator  Command
+Dashboard Dashboard
+```
+
+---
+
+# Hardware Requirements
+
+## Compute
+
+| Component | Specification                    |
+| --------- | -------------------------------- |
+| SBC       | Raspberry Pi 4 Model B (8GB RAM) |
+| Storage   | 64GB Class-10 MicroSD Card       |
+
+## Camera
+
+| Component     | Specification                   |
+| ------------- | ------------------------------- |
+| Camera Module | Raspberry Pi Camera Module v1.3 |
+| Sensor        | OV5647                          |
+| Interface     | CSI Ribbon Cable                |
+
+## Drone Platform
+
+| Component                    | Quantity |
+| ---------------------------- | -------- |
+| F450 Frame                   | 1        |
+| Avionics C2826 1000KV Motors | 4        |
+| 30A ESC                      | 4        |
+| 10x4.5 Propellers            | 4        |
+
+## Power
+
+| Component          | Specification               |
+| ------------------ | --------------------------- |
+| Flight Battery     | 3S LiPo 3300mAh 35C         |
+| Connector          | XT60                        |
+| Raspberry Pi Power | 5V 3A USB-C                 |
+| Test Power Supply  | Keithley DC Supply (11V 3A) |
+
+## Cooling
+
+| Component   | Specification |
+| ----------- | ------------- |
+| Heatsinks   | Aluminum Set  |
+| Cooling Fan | 30mm 5V Fan   |
+
+---
+
+# Software Stack
+
+## Operating System
+
+* Raspberry Pi OS Trixie (Debian 13)
+* Python 3.13.5
+
+## AI & Computer Vision
+
+* YOLOv8
+* OpenCV
+* NumPy
+* Pillow
+
+## AWS Services
+
+* AWS IoT Core
+* AWS Lambda
+* Amazon DynamoDB
+* Amazon S3
+* Amazon API Gateway
+* Amazon CloudWatch
+
+---
+
+# AWS Infrastructure
+
+## AWS IoT Core
+
+### Device
+
+```yaml
+Thing Name: mosaic-node-01
+Protocol: MQTT over TLS
+Purpose: Detection and Telemetry Communication
+```
+
+---
+
+## DynamoDB Tables
+
+| Table            | Purpose                     |
+| ---------------- | --------------------------- |
+| detections       | Victim detection records    |
+| swarm_nodes      | Drone health and status     |
+| policies         | Adaptive threshold policies |
+| feedback_history | Operator feedback logs      |
+
+---
+
+## S3 Bucket
+
+```yaml
+Bucket Name: mosaic-snapshots-yourname
+Region: ap-south-1
+Purpose: Detection image storage
+```
+
+---
+
+## Lambda Functions
+
+| Function                 | Responsibility         |
+| ------------------------ | ---------------------- |
+| mosaic-detection-ingest  | Detection processing   |
+| mosaic-operator-feedback | Feedback learning      |
+| mosaic-get-detections    | Detection retrieval    |
+| mosaic-get-swarm-status  | Swarm monitoring       |
+| mosaic-get-policy        | Policy synchronization |
+| mosaic-heartbeat-ingest  | Health monitoring      |
+| mosaic-get-scenarios     | Scenario simulation    |
+
+---
+
+## API Gateway Endpoints
+
+```text
+/detections
+/feedback
+/swarm
+/policy
+/heartbeat
+/scenarios
+```
+
+All endpoints are deployed to the **dev** stage with CORS enabled.
+
+---
+
+# Project Structure
+
+```text
 mosaic-edge/
-├── actuation/              Motor and ESC control
-│   ├── init.py
+│
+├── actuation/
+│   ├── __init__.py
 │   └── motor_controller.py
-├── camera/                 Camera capture
-│   ├── init.py
+│
+├── camera/
+│   ├── __init__.py
 │   └── capture.py
-├── certs/                  AWS IoT certificates
-│   └── README.md           (certificates not in repo)
-├── comms/                  MQTT communication
-│   ├── init.py
+│
+├── certs/
+│   └── README.md
+│
+├── comms/
+│   ├── __init__.py
 │   └── mqtt_client.py
-├── data/                   Local telemetry storage
+│
+├── data/
 │   └── .gitkeep
-├── detection/              AI detection pipeline
-│   ├── init.py
+│
+├── detection/
+│   ├── __init__.py
 │   ├── confidence.py
 │   ├── detector.py
 │   ├── expression_analyzer.py
 │   └── pose_analyzer.py
-├── lambda/                 AWS Lambda functions
-│   └── (7 Python files)
-├── models/                 YOLO model files
-│   └── README.md           (models not in repo)
-├── utils/                  Helper utilities
-│   ├── init.py
+│
+├── lambda/
+│   └── (7 Lambda Functions)
+│
+├── models/
+│   └── README.md
+│
+├── utils/
+│   ├── __init__.py
 │   ├── image_utils.py
 │   └── telemetry_logger.py
-├── config.example.py       Configuration template
-├── dashboard.html          Operator dashboard
-├── stakeholder.html        Stakeholder dashboard
-├── env_setup.py            Environment variables
-├── esc_calibrate.py        ESC calibration tool
-├── swarm_simulator.py      Simulates nodes 02 03 04
-├── download_models.py      Downloads YOLO models
-├── motor_diagnostic.py     Motor testing tool
-├── throttle_test.py        Throttle testing tool
-├── launch_all.sh           Launches all services
-├── main.py                 Main detection loop
-├── requirements.txt        Python dependencies
-└── adaptive_rules.json     Threshold learning rules
+│
+├── config.example.py
+├── dashboard.html
+├── stakeholder.html
+├── env_setup.py
+├── esc_calibrate.py
+├── swarm_simulator.py
+├── download_models.py
+├── motor_diagnostic.py
+├── throttle_test.py
+├── launch_all.sh
+├── main.py
+├── requirements.txt
+└── adaptive_rules.json
+```
+
+---
+
+# Performance Targets
+
+| Metric                  | Target         |
+| ----------------------- | -------------- |
+| Detection Response Time | < 3 Seconds    |
+| Drone Fleet Size        | 4 Nodes        |
+| Edge Processing         | Real-Time      |
+| Cloud Synchronization   | Near Real-Time |
+| Dashboard Updates       | Live           |
+| Learning Mode           | Adaptive       |
+
+---
+
+# Innovation Highlights
+
+* Autonomous Multi-Drone Coordination
+* Edge AI Victim Detection
+* Human-in-the-Loop Learning
+* Adaptive Confidence Thresholds
+* Real-Time GPS Rescue Alerts
+* Cloud-Synchronized Swarm Intelligence
+* Dual Dashboard Command Architecture
+
+---
+
+# Future Enhancements
+
+* GPS-guided autonomous navigation
+* Thermal camera integration
+* Multi-class disaster victim detection
+* AI-based route optimization
+* Mesh networking between drones
+* Large-scale swarm deployment
+
+---
+
+# Mission Statement
+
+> **MOSAIC aims to accelerate flood disaster response through autonomous drone swarms, edge artificial intelligence, and adaptive human-guided learning to locate victims faster, improve rescue efficiency, and ultimately save lives.**
+
+---
+
+## Authors
+
+**Aayush Rajput**
+
+**Product:** MOSAIC – Flood Disaster Response System
