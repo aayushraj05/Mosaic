@@ -24,9 +24,38 @@
 > **"Turning Critical Minutes into Saved Lives"**  
 > *From detection to rescue coordination — in real time*
 
+</div>
+
 ---
 
+## 🖼️ System Overview
+
+<div align="center">
+  <img src="drone_photo.jpg" alt="MOSAIC Drone" width="45%"/>
+  &nbsp;&nbsp;
+  <img src="dashboard_screenshot.jpg" alt="MOSAIC Operator Dashboard" width="45%"/>
 </div>
+
+<div align="center">
+  <img src="detection_confirmed.jpg" alt="MOSAIC Live Detection" width="92%"/>
+</div>
+
+---
+
+## 🎬 Demo Video
+
+<div align="center">
+
+[![MOSAIC Full System Demo](drone_photo.jpg)](https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link)
+
+**[▶ Watch Full System Demo on Google Drive](https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link)**
+
+*Click the image or link above to watch the complete MOSAIC demo*  
+*Includes: Live YOLOv8 detection · Motors spinning · Dashboard updating · Operator feedback · Threshold adapting*
+
+</div>
+
+---
 
 ## 🌊 The Problem
 
@@ -192,11 +221,11 @@ nano config.py
 ```
 
 ### 5 — Add AWS Certificates
-```bash
-# Place in certs/ folder:
-# AmazonRootCA1.pem
-# device.pem.crt
-# private.pem.key
+```
+Place in certs/ folder:
+  AmazonRootCA1.pem
+  device.pem.crt
+  private.pem.key
 ```
 
 ### 6 — Run
