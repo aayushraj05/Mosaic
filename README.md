@@ -1,6 +1,5 @@
 <div align="center">
 
-<!-- HERO BANNER -->
 <img src="https://img.shields.io/badge/MOSAIC-AI%20Swarm%20Intelligence-00d4ff?style=for-the-badge&labelColor=030810&color=00d4ff" alt="MOSAIC"/>
 
 # 🛸 MOSAIC
@@ -31,13 +30,23 @@
 ## 🖼️ System Overview
 
 <div align="center">
-  <img src="drone_photo.jpg" alt="MOSAIC Drone" width="45%"/>
+  <img src="Images/Physical%20Mvp%20Drone.png" alt="MOSAIC Physical MVP Drone" width="45%"/>
   &nbsp;&nbsp;
-  <img src="dashboard_screenshot.jpg" alt="MOSAIC Operator Dashboard" width="45%"/>
+  <img src="Images/Operator_dashboard.png" alt="MOSAIC Operator Dashboard" width="45%"/>
 </div>
 
+<br/>
+
 <div align="center">
-  <img src="detection_confirmed.jpg" alt="MOSAIC Live Detection" width="92%"/>
+  <img src="Images/Detected_victim%20(Drone%20Pov).png" alt="MOSAIC Live Detection — Drone POV" width="45%"/>
+  &nbsp;&nbsp;
+  <img src="Images/Rescueteam_dashboard.png" alt="MOSAIC Rescue Team Dashboard" width="45%"/>
+</div>
+
+<br/>
+
+<div align="center">
+  <img src="Images/Results.png" alt="MOSAIC Detection Results" width="92%"/>
 </div>
 
 ---
@@ -46,12 +55,15 @@
 
 <div align="center">
 
-[![MOSAIC Full System Demo](drone_photo.jpg)](https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link)
+[![MOSAIC Full System Demo](https://img.youtube.com/vi/-SGyDQs7yAI/maxresdefault.jpg)](https://youtu.be/-SGyDQs7yAI)
 
-**[▶ Watch Full System Demo on Google Drive](https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link)**
+**[▶ Watch Full Demo on YouTube](https://youtu.be/-SGyDQs7yAI)**
 
-*Click the image or link above to watch the complete MOSAIC demo*  
-*Includes: Live YOLOv8 detection · Motors spinning · Dashboard updating · Operator feedback · Threshold adapting*
+*Live YOLOv8 detection · Motors spinning · Dashboard updating in real time · Operator feedback · Threshold adapting*
+
+<br/>
+
+📥 **[Download Full Demo Package from Google Drive](https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link)**
 
 </div>
 
@@ -256,7 +268,8 @@ mosaic-edge/
 ├── 💾 data/                Local telemetry CSV storage
 ├── 🧠 detection/           AI pipeline — YOLOv8 + Pose + Expression
 ├── ☁️  lambda/              7 AWS Lambda functions
-├── 🤖 models/              YOLO model files (not in repo — download separately)
+├── 🖼️  Images/              Product screenshots and drone photos
+├── 🤖 models/              YOLO model files (not in repo)
 ├── 🛠️  utils/               Image drawing and telemetry logging
 ├── ⚙️  config.example.py    Configuration template (copy to config.py)
 ├── 📊 dashboard.html        Operator dashboard — real-time detection review
@@ -277,32 +290,24 @@ Camera Frame (640×480 @ 15FPS)
          │
          ▼
 ┌─────────────────┐
-│   YOLOv8n       │  → Person detected with bounding box
-│   Detection     │    Confidence: 0.0 – 1.0
+│   YOLOv8n       │  → Person detected     weight: 50%
 └────────┬────────┘
-         │ weight: 50%
          ▼
 ┌─────────────────┐
-│  Pose Analysis  │  → 17 keypoints: fallen / waving / unconscious
-│  YOLOv8n-Pose   │    Pose score: 0.0 – 1.0
+│  Pose Analysis  │  → 17 keypoints        weight: 30%
+│  YOLOv8n-Pose   │    fallen/waving/unconscious
 └────────┬────────┘
-         │ weight: 30%
          ▼
 ┌─────────────────┐
-│   Expression    │  → Face detection via OpenCV Haar Cascade
-│   Analysis      │    Expression score: 0.0 – 1.0
+│   Expression    │  → OpenCV Haar Cascade weight: 20%
+│   Analysis      │
 └────────┬────────┘
-         │ weight: 20%
          ▼
-┌─────────────────────────────────────┐
-│  Final Score = YOLO×0.50            │
-│             + Pose×0.30             │
-│             + Expression×0.20       │
-└────────┬────────────────────────────┘
+  Final Score = YOLO×0.50 + Pose×0.30 + Expression×0.20
          │
-         ├── Score ≥ 0.60  →  ✅ CONFIRMED   → Motors spin + GPS sent
-         ├── Score ≥ 0.30  →  ⚠️  UNCERTAIN   → Image sent for review
-         └── Score < 0.30  →  ❓ MISSED      → Logged + rescan
+         ├── ≥ 0.60  →  ✅ CONFIRMED  → Motors spin + GPS sent to cloud
+         ├── ≥ 0.30  →  ⚠️  UNCERTAIN  → Image sent to operator for review
+         └── < 0.30  →  ❓ MISSED     → Logged locally + rescan triggered
 ```
 
 ---
@@ -318,17 +323,15 @@ Detection → Uncertain → Operator sees photo
                     │                    │
                     └─────────┬──────────┘
                               ▼
-                    Lambda 2 calculates
-                    new threshold
-                    FP rate > 40% → raise +0.05
-                    Confirm rate > 70% → lower -0.03
+                    Lambda 2 calculates new threshold
+                    FP rate > 40%    → raise +0.05
+                    Confirm > 70%    → lower -0.03
                               │
                               ▼
                     MQTT pushed to ALL 4 drones
                     simultaneously (< 2 seconds)
                               │
                               ▼
-                    All drones adapt
                     adaptive_rules.json updated
                     Motors pulse = rescan signal
 ```
@@ -362,10 +365,23 @@ Detection → Uncertain → Operator sees photo
 
 ---
 
+## 👨‍💻 Team
+
+| Name | Employee ID |
+|------|-------------|
+| Giftina Roseline S N | 2861104 |
+| Rishav Kumar | 3199845 |
+| Bharanidharan J | 2859059 |
+| Oviya P | 2876916 |
+| Aayush Rajput | 2861780 |
+| Soma Sundaram A | 2860572 |
+
+---
+
 ## 🏢 Institution
 
 **TCS — Tata Consultancy Services**  
-Product MOSAIC — Flood Disaster Response AI System  
+Project MOSAIC — Flood Disaster Response AI System  
 IAE Training Program · 2026
 
 ---
@@ -375,5 +391,10 @@ IAE Training Program · 2026
 **FROM DETECTION TO RESCUE COORDINATION — IN REAL TIME**
 
 *Designed for Flood Response · Autonomous Operations · Smart Coordination · Scalable Deployment*
+
+<br/>
+
+[![YouTube](https://img.shields.io/badge/Demo-YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/-SGyDQs7yAI)
+[![Google Drive](https://img.shields.io/badge/Download-Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1bEV4gVOkEiWBHRMurLpmcDrqar1YKICs?usp=drive_link)
 
 </div>
